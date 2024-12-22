@@ -62,6 +62,7 @@ namespace Fams3Adapter.Dynamics.SearchRequest
         Task<SSG_AgencyLocation> GetSearchAgencyLocation(string locationCode, string agencyCode, CancellationToken cancellationToken);
         Task<SSG_Person> GetPerson(Guid personId, CancellationToken cancellationToken);
         Task<SSG_Employment> GetEmployment(Guid personId, CancellationToken cancellationToken);
+        Task<IEnumerable<FAMS_TaxCode>> GetTaxCodes(CancellationToken cancellationToken);
         Task<SSG_Notese> CreateNotes(NotesEntity searchRequest, CancellationToken cancellationToken);
         Task<SSG_SearchRequest> UpdateSearchRequest(Guid requestId, IDictionary<string, object> updatedFields, CancellationToken cancellationToken);
         //Task<SSG_Person> UpdatePerson(Guid personId, IDictionary<string, object> updatedFields, PersonEntity newPerson, CancellationToken cancellationToken);
@@ -204,12 +205,27 @@ namespace Fams3Adapter.Dynamics.SearchRequest
         public async Task<SSG_TaxIncomeInformation> CreateTaxIncomeInformation(TaxIncomeInformationEntity taxinfo, CancellationToken cancellationToken)
         {
             if (taxinfo.Person.IsDuplicated)
+
+        private IEnumerable<FAMS_TaxCode> _taxCodes { get; set; }
+        public async Task<IEnumerable<FAMS_TaxCode>> GetTaxCodes(CancellationToken cancellationToken)
             {
                 Guid duplicatedTaxInfoId = await _duplicateDetectService.Exists(taxinfo.Person, taxinfo);
                 if (duplicatedTaxInfoId != Guid.Empty)
                     return new SSG_TaxIncomeInformation() { TaxincomeinformationId = duplicatedTaxInfoId };
             }
-            return await this._oDataClient.For<SSG_TaxIncomeInformation>().Set(taxinfo).InsertEntryAsync(cancellationToken);
+
+            return await this._oDataClient
+                .For<SSG_TaxIncomeInformation>()
+                .Set(taxinfo)
+                .InsertEntryAsync(cancellationToken);
+        }
+
+        private IEnumerable<FAMS_TaxCode> _taxCodes { get; set; }
+        public async Task<IEnumerable<FAMS_TaxCode>> GetTaxCodes(CancellationToken cancellationToken)
+        {
+            if (_taxCodes == null)
+                _taxCodes = await _oDataClient.For<FAMS_TaxCode>().FindEntriesAsync(cancellationToken);
+            return _taxCodes;
         }
 
         public async Task<SSG_Aliase> CreateName(AliasEntity name, CancellationToken cancellationToken)
