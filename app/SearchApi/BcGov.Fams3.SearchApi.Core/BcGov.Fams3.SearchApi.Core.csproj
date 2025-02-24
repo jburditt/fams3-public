@@ -5,8 +5,8 @@
     <Authors>PathFinder</Authors>
     <Company>BcGov</Company>
     <Description>A core Library for BCGOV SearchApi Related Products</Description>
-    <Version>1.0.54</Version>
-    <PackageVersion>1.0.54</PackageVersion>
+    <Version>1.0.54.1</Version>
+    <PackageVersion>1.0.54.1</PackageVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BcGov.Fams3.SearchApi.Contracts\BcGov.Fams3.SearchApi.Contracts.csproj" />
+    <ProjectReference Include="..\BcGov.Fams3.SearchApi.Contracts\BcGov.Fams3.SearchApi.Contracts2.csproj" />
   </ItemGroup>
 
 </Project>
